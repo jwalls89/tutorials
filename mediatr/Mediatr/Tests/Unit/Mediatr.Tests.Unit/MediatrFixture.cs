@@ -121,7 +121,23 @@ namespace Mediatr.Tests.Unit
 
         }
 
-        //When not registered - throw InvalidOperationException which doesn't allow catching of invalid configuration
-        //How do you test that all requests are registered? //could write a script to check this as a unit test
+        //This pipeline has been set up to use a custom pipeline behaviour
+        //Use the default handling for running pre processors and post processors which is to run them in the sequence provided by the IOC container
+        
+
+        [Test]
+        public async Task Pipeline()
+        {
+            //Arrange
+            var sut = GetSut();
+            var expectedResult = new PipelineResponse { Result = " Pipeline behaviour start PipelinePreProcessor AnotherPipelinePreProcessor HANDLER PipelinePostProcessor AnotherPipelinePostProcessor Pipeline behaviour end", Success = true };
+                                                                  
+            //Act
+            var result = await sut.Send(new PipelineRequest { Name = "" });
+
+            //Assert
+            Assert.That(result.Success, Is.EqualTo(expectedResult.Success));
+            Assert.That(result.Result, Is.EqualTo(expectedResult.Result));
+        }
     }
 }
